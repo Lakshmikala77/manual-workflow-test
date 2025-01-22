@@ -1,7 +1,7 @@
 name: Manual Deployment Workflow
 
 on:
-  workflow_dispatch:  # Enables manual trigger
+  workflow_dispatch:
     inputs:
       branch:
         description: 'Select branch to deploy'
@@ -18,10 +18,11 @@ jobs:
     steps:
       - name: Validate Selected Branch
         run: |
-          if [[ "${{ github.event.inputs.branch }}" == "staging_fix" || "${{ github.event.inputs.branch }}" == "staging_production" ]]; then
+          BRANCH="${{ github.event.inputs.branch }}"
+          if [[ "$BRANCH" == "staging_fix" || "$BRANCH" == "staging_production" ]]; then
             echo "Valid branch selected. Proceeding with deployment..."
           else
-            echo "Invalid branch selected. Exiting workflow."
+            echo "Error: Invalid branch selected ($BRANCH). Exiting workflow."
             exit 1
           fi
 
