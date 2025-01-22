@@ -32,14 +32,19 @@ jobs:
 
           echo "✅ Branch validation successful. Proceeding..."
 
-  deploy:
-    needs: validate-branches
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Deploy Code
-        run: |
-          echo "Deploying from branch $GITHUB_REF_NAME to ${{ github.event.inputs.target_branch }}"
-          # Add your deployment script here
+      - name: Linting
+        run: npm run lint
+        shell: bash
+    
+  tests_coverage:
+    needs: lint
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
