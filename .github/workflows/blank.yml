@@ -1,0 +1,38 @@
+name: Manual Deployment Workflow
+
+on:
+  workflow_dispatch:  # Enables manual trigger
+    inputs:
+      branch:
+        description: 'Select branch to deploy'
+        required: true
+        default: 'staging_fix'
+        type: choice
+        options:
+          - staging_fix
+          - staging_production
+
+jobs:
+  validate-branch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate Selected Branch
+        run: |
+          if [[ "${{ github.event.inputs.branch }}" == "staging_fix" || "${{ github.event.inputs.branch }}" == "staging_production" ]]; then
+            echo "Valid branch selected. Proceeding with deployment..."
+          else
+            echo "Invalid branch selected. Exiting workflow."
+            exit 1
+          fi
+
+  deploy:
+    needs: validate-branch
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Deploy Code
+        run: |
+          echo "Deploying from branch ${{ github.event.inputs.branch }} to staging environment..."
+          # Add your deployment script or commands here
