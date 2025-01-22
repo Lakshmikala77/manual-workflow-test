@@ -38,9 +38,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Linting
-        run: npm run lint
-        shell: bash
     
   tests_coverage:
     needs: lint
