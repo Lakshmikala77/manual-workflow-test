@@ -6,10 +6,10 @@ on:
       target_branch:
         description: 'Select target branch for deployment'
         required: true
-        default: 'staging_fix'
+        default: 'staging'
         type: choice
         options:
-          - staging_fix
+          - staging
           - staging_production
 
 jobs:
