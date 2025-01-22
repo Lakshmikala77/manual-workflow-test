@@ -1,38 +1,47 @@
 name: Manual Deployment Workflow
 
 on:
-  workflow_dispatch:  # Enables manual trigger
+  workflow_dispatch:
     inputs:
-      branch:
-        description: 'Select branch to deploy'
+      target_branch:
+        description: 'Select target branch for deployment'
         required: true
-        default: 'staging_fix'
+        default: 'staging'
         type: choice
         options:
-          - staging_fix
+          - staging
           - staging_production
 
 jobs:
-  validate-branch:
+  validate-branches:
     runs-on: ubuntu-latest
     steps:
-      - name: Validate Selected Branch
+      - name: Validate Target Branch
         run: |
-          if [[ "${{ github.event.inputs.branch }}" == "staging_fix" || "${{ github.event.inputs.branch }}" == "staging_production" ]]; then
-            echo "Valid branch selected. Proceeding with deployment..."
-          else
-            echo "Invalid branch selected. Exiting workflow."
-            exit 1
-          fi
+          TARGET_BRANCH="${{ github.event.inputs.target_branch }}"
+          HEAD_BRANCH="${GITHUB_REF#refs/heads/}"
 
-  deploy:
-    needs: validate-branch
+          echo "Head branch: $HEAD_BRANCH"
+          echo "Target branch: $TARGET_BRANCH"
+
+          # # Check if the selected target branch is valid
+          # if [[ "$TARGET_BRANCH" != "staging_fix" && "$TARGET_BRANCH" != "staging_production" ]]; then
+          #   echo "❌ Error: Invalid target branch selected ($TARGET_BRANCH). Allowed: staging_fix, staging_production."
+          #   exit 1
+          # fi
+
+          echo "✅ Branch validation successful. Proceeding..."
+
+  lint:
+    name: Lint
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Deploy Code
-        run: |
-          echo "Deploying from branch ${{ github.event.inputs.branch }} to staging environment..."
-          # Add your deployment script or commands here
+    
+  tests_coverage:
+    needs: lint
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
