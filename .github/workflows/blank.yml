@@ -3,6 +3,10 @@ name: Manual Deployment Workflow
 on:
   workflow_dispatch:
     inputs:
+      head_branch:
+        description: "Enter the head branch to run the workflow"
+        required: true
+        default: "staging_fix"
       target_branch:
         description: 'Select target branch for deployment'
         required: true
@@ -29,6 +33,10 @@ jobs:
           #   echo "❌ Error: Invalid target branch selected ($TARGET_BRANCH). Allowed: staging_fix, staging_production."
           #   exit 1
           # fi
+            if [ "$ {{ github.event.inputs.head_branch }}" ! = "staging" ]; then
+              echo "Error: head branch must be 'staging_fix'."
+              exit 1
+            fi
 
           echo "✅ Branch validation successful. Proceeding..."
 
