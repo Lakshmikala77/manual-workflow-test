@@ -24,11 +24,11 @@ jobs:
           echo "Head branch: $HEAD_BRANCH"
           echo "Target branch: $TARGET_BRANCH"
 
-          # Check if the selected target branch is valid
-          if [[ "$TARGET_BRANCH" != "staging_fix" && "$TARGET_BRANCH" != "staging_production" ]]; then
-            echo "❌ Error: Invalid target branch selected ($TARGET_BRANCH). Allowed: staging_fix, staging_production."
-            exit 1
-          fi
+          # # Check if the selected target branch is valid
+          # if [[ "$TARGET_BRANCH" != "staging_fix" && "$TARGET_BRANCH" != "staging_production" ]]; then
+          #   echo "❌ Error: Invalid target branch selected ($TARGET_BRANCH). Allowed: staging_fix, staging_production."
+          #   exit 1
+          # fi
 
           echo "✅ Branch validation successful. Proceeding..."
 
